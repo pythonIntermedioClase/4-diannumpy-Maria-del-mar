@@ -505,8 +505,9 @@ def clasificar_valores_vectorizado(valores, umbral=1_000_000):
     # TODO:
     # 1. Guarda "ALTO" en categoria_alta y "BAJO" en categoria_baja
     # 2. Retorna np.where(valores > umbral, categoria_alta, categoria_baja)
-    pass
-
+    categoria_alta = "ALTO"
+    categoria_baja = "BAJO"
+    return np.where(valores > umbral, categoria_alta, categoria_baja)
 
 def aplicar_descuento_vectorizado(valores, pagos_voluntarios):
     """
@@ -532,7 +533,9 @@ def aplicar_descuento_vectorizado(valores, pagos_voluntarios):
     # 1. Guarda 0.90 en factor_descuento
     # 2. Calcula valores_con_descuento = valores * factor_descuento
     # 3. Retorna np.where(pagos_voluntarios, valores_con_descuento, valores)
-    pass
+    factor_descuento = 0.90
+    valores_con_descuento = valores * factor_descuento
+    return np.where(pagos_voluntarios, valores_con_descuento, valores)
 
 
 def calcular_sanciones_vectorizadas(valores, dias_mora):
@@ -583,4 +586,21 @@ def calcular_sanciones_vectorizadas(valores, dias_mora):
     #        ),
     #    )
     # 3. Retorna valores * tasa
-    pass
+    tasa_sin_mora = 0.00
+    tasa_mora_leve = 0.01
+    tasa_mora_moderada = 0.05
+    tasa_mora_grave = 0.10
+    tasa = np.where(
+        dias_mora == 0,
+        tasa_sin_mora,
+        np.where(
+            dias_mora <= 30,
+            tasa_mora_leve,
+            np.where(
+                dias_mora <= 90,
+                tasa_mora_moderada,
+                tasa_mora_grave,
+            ),
+        ),
+    )
+    return valores * tasa
